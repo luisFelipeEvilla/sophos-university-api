@@ -2,16 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FacultySchema } from './schema/faculty.schema';
-import { FacultyService } from './faculty/faculty.service';
-
+import { FacultyModule } from './faculty/faculty.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://test:test@cluster0.3eyqur6.mongodb.net/sophosUniversity',{dbName: 'studentdb'}),
-    MongooseModule.forFeature([{ name: 'faculty', schema: FacultySchema}])
-  ],
+    MongooseModule.forRoot('mongodb+srv://test:test@cluster0.3eyqur6.mongodb.net', 
+    { dbName: 'sophosUniversity' }),
+    FacultyModule,],
   controllers: [AppController],
-  providers: [AppService, FacultyService],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
