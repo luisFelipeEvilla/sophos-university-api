@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FacultyModule } from './faculty/faculty.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FacultyModule } from './faculty/faculty.module';
       synchronize: true,
     }),
     FacultyModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
