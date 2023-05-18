@@ -1,36 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Faculty } from './entities/faculty.entity';
-import { Model } from 'mongoose';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FacultyService {
-  constructor(@InjectModel('Faculty') private readonly facultyModel: Model<Faculty>) { }
+  constructor(@InjectRepository(Faculty) private readonly facultyRepository: Repository<Faculty>) { }
 
-  async create(createFacultyDto: CreateFacultyDto): Promise<Faculty> {
-    const createdFaculty = await new this.facultyModel(createFacultyDto);
-    return createdFaculty.save();
+  async create(createFacultyDto: CreateFacultyDto) {
+    const faculty = this.facultyRepository.create(createFacultyDto);
+    return await this.facultyRepository.save(faculty);
   }
 
-  async findAll(): Promise<Faculty[]> {
-    const products = await this.facultyModel.find().exec();
-    return products;
+  async findAll() {
+    return await this.facultyRepository.find();
   }
 
-  async findOne(id: string): Promise<Faculty> {
-    const product = await this.facultyModel.findById(id).exec();
-    return product;
+  async findOne(id: number) {
+    const faculty = await this.facultyRepository.findOne({ where: { id } });
+
+    if (!faculty) throw new NotFoundException(`Faculty #${id} not found`);
+
+    return faculty;
   }
 
-  async update(id: string, updateFacultyDto: UpdateFacultyDto) {
-    const updatedProduct = await this.facultyModel.findByIdAndUpdate(id, updateFacultyDto, {new: true}).exec();
-    return updatedProduct;
+  async update(id: number, updateFacultyDto: UpdateFacultyDto) {
+    const faculty = await this.facultyRepository.findOne({ where: { id } });
+
+    if (!faculty) throw new NotFoundException(`Faculty #${id} not found`);
+
+    Object.assign(faculty, updateFacultyDto);
+
+    return await this.facultyRepository.save(faculty);
   }
 
-  async remove(id: string) : Promise<Faculty> {
-    const removedProduct = await this.facultyModel.findByIdAndDelete(id).exec();
-    return removedProduct;
+  async remove(id: number) {
+    const faculty = await this.facultyRepository.findOne({ where: { id } });
+
+    if (!faculty) throw new NotFoundException(`Faculty #${id} not found`);
+
+    return await this.facultyRepository.remove(faculty);
   }
 }

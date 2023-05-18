@@ -1,4 +1,4 @@
-/* import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { FacultyController } from './faculty.controller';
 import { FacultyService } from './faculty.service';
 
@@ -18,4 +18,3 @@ describe('FacultyController', () => {
     expect(controller).toBeDefined();
   });
 });
- */

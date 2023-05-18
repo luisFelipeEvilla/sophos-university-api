@@ -1,5 +1,13 @@
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
 export class Faculty {
-    readonly _id: string;
-    readonly name: string;
-    readonly createdAt: Date;
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column()
+    name: string;
+
+    @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    created_at: Date
 }
