@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Teacher } from './entities/teacher.entity';
 import { Repository } from 'typeorm';
 import { Degree } from './entities/degree.entity';
 import { CreateDegreeDtoWithTeacher } from './dto/create-degree-with-teacher-dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class TeacherService {
@@ -30,7 +31,7 @@ export class TeacherService {
     });
 
     if (!teacher) {
-      throw new Error(`Teacher #${id} not found`);
+      throw new NotFoundException(`Teacher #${id} not found`);
     }
 
     return teacher;
@@ -43,7 +44,7 @@ export class TeacherService {
     });
     
     if (!teacher) {
-      throw new Error(`Teacher #${id} not found`);
+      throw new NotFoundException(`Teacher #${id} not found`);
     }
 
     return await this.teacherRepository.save(teacher);
@@ -58,7 +59,7 @@ export class TeacherService {
   async createDegree(id: number, degree: CreateDegreeDtoWithTeacher) {
     const teacher = await this.teacherRepository.findOne({ where: { id }, relations: ['degrees'] });
 
-    if (!teacher) { throw new Error(`Teacher #${id} not found`);} 
+    if (!teacher) { throw new NotFoundException(`Teacher #${id} not found`);} 
 
     const newDegree = new Degree();
 
