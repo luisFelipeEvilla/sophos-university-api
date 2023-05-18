@@ -12,12 +12,15 @@ import { Student } from 'src/student/entities/student.entity';
 import { StudentService } from 'src/student/student.service';
 import { TakeCourse } from './entities/take-course.entity';
 import { Faculty } from 'src/faculty/entities/faculty.entity';
+import { SemesterService } from 'src/semester/semester.service';
+import { EnrollSemester } from 'src/student/entities/enroll-semester.entity';
+import { Semester } from 'src/semester/entities/semester.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Course, TeachCourse, Teacher,
-   Degree, TakeCourse, Faculty, Student]),
+   Degree, TakeCourse, Faculty, Student, EnrollSemester, Semester]),
   ],
   controllers: [CourseController],
-  providers: [CourseService, TeacherService, StudentService]
+  providers: [CourseService, TeacherService, StudentService, SemesterService]
 })
 export class CourseModule { }

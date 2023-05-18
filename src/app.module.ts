@@ -19,6 +19,7 @@ import { SemesterModule } from './semester/semester.module';
       database: 'sophos',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     FacultyModule,
     StudentModule,

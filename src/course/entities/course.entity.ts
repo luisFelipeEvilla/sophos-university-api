@@ -22,6 +22,6 @@ export class Course {
     @OneToMany(() => TeachCourse, teachCourse => teachCourse.course, {cascade: true, eager: true})
     teachers: TeachCourse[];
 
-    @OneToMany(() => TakeCourse, takeCourse => takeCourse.course, {cascade: true, eager: true})
+    @OneToMany(() => TakeCourse, takeCourse => takeCourse.course, {cascade: true})
     students: TakeCourse[];
 }

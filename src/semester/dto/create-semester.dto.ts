@@ -3,13 +3,13 @@ import { IsNotEmpty, IsNumber, IsPositive, Max, MaxLength, Min, MinLength } from
 export class CreateSemesterDto {
     @IsNumber()
     @IsPositive()
-    @MinLength(4)
-    @MaxLength(4)
+    @Max(2100)
+    @Min(1950)
     year: number;
 
     @IsNumber()
     @IsPositive()
     @Min(1)
     @Max(2)
-    semester: number;
+    period: number;
 }

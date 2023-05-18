@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSemesterDto } from './dto/create-semester.dto';
 import { UpdateSemesterDto } from './dto/update-semester.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,8 +10,17 @@ export class SemesterService {
   constructor(@InjectRepository(Semester) private readonly semesterRepository: Repository<Semester>) { }
 
   async create(createSemesterDto: CreateSemesterDto) {
-    const semester = this.semesterRepository.create(createSemesterDto);
-    return await this.semesterRepository.save(semester);
+    const {year, period} = createSemesterDto
+    // check if the semester already exists
+    const semester = this.semesterRepository.findOne({
+      where: { year, period}
+    });
+
+    if (semester) throw new ConflictException(`Semester ${year}-${period} already exists`)
+
+    const newSemester = this.semesterRepository.create(createSemesterDto);
+
+    return await this.semesterRepository.save(newSemester);
   }
 
   async findAll() {
@@ -34,7 +43,6 @@ export class SemesterService {
   }
 
   async remove(id: number) {
-    const semester = await this.semesterRepository.findOne({ where: { id } });
-    return await this.semesterRepository.remove(semester);
+    return await this.semesterRepository.delete({ id })
   }
 }
