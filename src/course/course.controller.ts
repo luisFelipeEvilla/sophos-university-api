@@ -40,4 +40,14 @@ export class CourseController {
   removeTeacher(@Param('id') id: string, @Param('teacherId') teacherId: string){
     return this.courseService.removeTeacher(+id, +teacherId);
   }
+
+  @Post(':id/student/:studentId')
+  addStudent(@Param('id') id: string, @Param('studentId') studentId: string){
+    return this.courseService.addStudent(+id, +studentId);
+  }
+
+  @Delete(':id/student/:studentId')
+  removeStudent(@Param('id') id: string, @Param('studentId') studentId: string){
+    return this.courseService.removeStudent(+id, +studentId);
+  }
 }

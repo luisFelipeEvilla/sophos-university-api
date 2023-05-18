@@ -16,7 +16,7 @@ export class StudentService {
 
     const faculty = await this.facultyRepository.findOne({ where: { id: createStudentDto.facultyId } });
 
-    if (!faculty) throw new NotFoundException(`Faculty #${createStudentDto.facultyId} not found`);
+    if (!faculty) throw new NotFoundException(`Faculty with id ${createStudentDto.facultyId} not found`);
 
     student.faculty = faculty;
   
@@ -31,7 +31,7 @@ export class StudentService {
     const student = await this.studentRepository.findOne({ where: { id }, relations: ['faculty'] });
 
 
-    if (!student) throw new NotFoundException(`Student #${id} not found`);
+    if (!student) throw new NotFoundException(`Student with id ${id} not found`);
 
     return student;
   }
@@ -39,7 +39,7 @@ export class StudentService {
   async update(id: number, updateStudentDto: UpdateStudentDto) {
     const student = await this.studentRepository.findOne({ where: { id } });
 
-    if (!student) throw new NotFoundException(`Student #${id} not found`);
+    if (!student) throw new NotFoundException(`Student with id ${id} not found`);
 
     Object.assign(student, updateStudentDto);
 
@@ -49,7 +49,7 @@ export class StudentService {
   async remove(id: number) {
     const student = await this.studentRepository.findOne({ where: { id } });
 
-    if (!student) throw new NotFoundException(`Student #${id} not found`);
+    if (!student) throw new NotFoundException(`Student with id ${id} not found`);
 
     return await this.studentRepository.remove(student);
   }
