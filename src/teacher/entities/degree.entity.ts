@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Teacher } from "./teacher.entity";
 
 @Entity()
@@ -12,7 +12,7 @@ export class Degree {
     @Column()
     earned_at: Date;
 
-    @OneToOne(() => Teacher)
+    @ManyToOne(() => Teacher)
     @JoinColumn()
     teacher: Teacher;
 }

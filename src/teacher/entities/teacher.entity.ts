@@ -18,6 +18,6 @@ export class Teacher {
     @Column()
     facultyId: number;
 
-    @OneToMany(() => Degree, degree => degree.teacher, { cascade: true })
+    @OneToMany(() => Degree, degree => degree.teacher)
     degrees: Degree[];
 }

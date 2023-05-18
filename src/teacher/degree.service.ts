@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,10 +16,12 @@ export class DegreeService {
   async create (degree: createDegreeDto) { 
     const teacher = await this.teacherService.findOne(degree.teacherId);
 
-    if (!teacher) { throw new Error(`Teacher #${degree.teacherId} not found`);} 
+    if (!teacher) { throw new NotFoundException(`Teacher #${degree.teacherId} not found`);} 
     
+    const newDegree = this.degreeRepository.create(degree);
+    newDegree.teacher = teacher;
     
-
+    return await this.degreeRepository.save(newDegree);
   }
 
   async remove(id: number, degreeId: number) {
