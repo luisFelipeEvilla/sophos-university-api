@@ -6,6 +6,7 @@ import { FacultyModule } from './faculty/faculty.module';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { CourseModule } from './course/course.module';
+import { SemesterModule } from './semester/semester.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CourseModule } from './course/course.module';
     StudentModule,
     TeacherModule,
     CourseModule,
+    SemesterModule,
   ],
   controllers: [AppController],
   providers: [AppService],
