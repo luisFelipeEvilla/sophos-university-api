@@ -23,6 +23,7 @@ export class Course {
     @JoinTable()
     teachers: Teacher[];
 
-    @ManyToMany(() => EnrollSemester, enrollSemester => enrollSemester.student, {cascade: true})
+    @ManyToMany(() => EnrollSemester, enrollSemester => enrollSemester.courses)
+    @JoinTable()
     students: EnrollSemester[];
 }

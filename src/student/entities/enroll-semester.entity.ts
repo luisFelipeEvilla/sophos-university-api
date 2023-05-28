@@ -18,7 +18,6 @@ export class EnrollSemester {
     student: Student;
 
     @ManyToMany(() => Course, course => course.students)
-    @JoinTable()
     courses: Course[];
 
     @OneToOne(() => EnrollSemester, enrollSemester => enrollSemester.student)
