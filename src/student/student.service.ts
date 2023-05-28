@@ -60,9 +60,9 @@ export class StudentService {
     return await this.studentRepository.remove(student);
   }
 
-  async enrollSemester(enrollSemesterDto: EnrollSemesterDto) {
+  async enrollSemester(id: number, enrollSemesterDto: EnrollSemesterDto) {
     try {
-      const student = await this.findOne(enrollSemesterDto.studentId);
+      const student = await this.findOne(id);
       const semester = await this.semesterService.getCurrentSemester();
 
       // check if  the student already enroll this semester

@@ -35,6 +35,6 @@ export class StudentController {
 
   @Post(':id/semester')
   enrollSemester(@Param('id') id: string, @Body() body: EnrollSemesterDto) {
-    return this.studentService.enrollSemester(body);
+    return this.studentService.enrollSemester(+id, body);
   }
 }
