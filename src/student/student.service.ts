@@ -63,11 +63,11 @@ export class StudentService {
   async enrollSemester(enrollSemesterDto: EnrollSemesterDto) {
     try {
       const student = await this.findOne(enrollSemesterDto.studentId);
-      const semester = await this.semesterService.findOne(enrollSemesterDto.semesterId);
+      const semester = await this.semesterService.getCurrentSemester();
 
       // check if  the student already enroll this semester
       const enrollSemester = await this.enrollSemesterRepository.findOne({
-        where: { student, semester }
+        where: { semester: { id: semester.id}, student: { id: student.id }}
       });
 
       if (enrollSemester) throw new ConflictException('Student already enroll this semester');

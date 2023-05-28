@@ -7,9 +7,5 @@ export class EnrollSemesterDto {
 
     @IsNumber()
     @IsPositive()
-    semesterId: number;
-
-    @IsNumber()
-    @IsPositive()
     credits: number;
 }

@@ -36,6 +36,22 @@ export class SemesterService {
     return semester;
   }
 
+  async getCurrentSemester() {
+      // get the last semester
+      const semesters = await this.semesterRepository.find({
+        order: {
+          year: 'DESC',
+          period: 'DESC'
+        }
+      });
+
+      const semester = semesters[0];
+
+      if (!semester) throw new NotFoundException(`Semester not found`);
+
+      return semester;
+  }
+
   async update(id: number, updateSemesterDto: UpdateSemesterDto) {
     const semester = await this.semesterRepository.findOne({ where: { id } });
     Object.assign(semester, updateSemesterDto);
