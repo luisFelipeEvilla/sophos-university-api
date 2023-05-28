@@ -17,7 +17,6 @@ export class Student {
     birthday: Date
 
     @ManyToOne(() => Faculty)
-    @JoinColumn()
     faculty: Faculty;
 
     @OneToMany(() => EnrollSemester, enrollSemester=> enrollSemester.student)

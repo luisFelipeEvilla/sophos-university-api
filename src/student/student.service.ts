@@ -15,7 +15,7 @@ export class StudentService {
     @InjectRepository(Faculty) private readonly facultyRepository: Repository<Faculty>,
     @InjectRepository(EnrollSemester) private readonly enrollSemesterRepository: Repository<EnrollSemester>,
     private readonly semesterService: SemesterService
-    ) { }
+  ) { }
 
   async create(createStudentDto: CreateStudentDto) {
     const student = this.studentRepository.create(createStudentDto);
@@ -25,7 +25,7 @@ export class StudentService {
     if (!faculty) throw new NotFoundException(`Faculty with id ${createStudentDto.facultyId} not found`);
 
     student.faculty = faculty;
-  
+
     return await this.studentRepository.save(student);
   }
 
@@ -34,7 +34,7 @@ export class StudentService {
   }
 
   async findOne(id: number) {
-    const student = await this.studentRepository.findOne({ where: { id }, relations: ['faculty', 'semesters', 'semesters.courses'], });
+    const student = await this.studentRepository.findOne({ where: { id }, relations: ['faculty', 'semesters', 'semesters.semester', 'semesters.courses'], });
 
 
     if (!student) throw new NotFoundException(`Student with id ${id} not found`);
@@ -64,21 +64,22 @@ export class StudentService {
     try {
       const student = await this.findOne(enrollSemesterDto.studentId);
       const semester = await this.semesterService.findOne(enrollSemesterDto.semesterId);
+
+      // check if  the student already enroll this semester
+      const enrollSemester = await this.enrollSemesterRepository.findOne({
+        where: { student, semester }
+      });
+
+      if (enrollSemester) throw new ConflictException('Student already enroll this semester');
+
+      const newEnrollSemester = this.enrollSemesterRepository.create(enrollSemesterDto);
+      newEnrollSemester.semester = semester;
+      newEnrollSemester.student = student;
+
+      return await this.enrollSemesterRepository.save(newEnrollSemester);
+
     } catch (error) {
       throw error;
     }
-    
-    // check if student already enroll this semester
-    const enrollSemester = await this.enrollSemesterRepository.findOne({
-      where: { 
-        studentId: enrollSemesterDto.studentId, semesterId: enrollSemesterDto.semesterId }
-      }
-    );
-
-    if (enrollSemester) throw new ConflictException('Student already enroll this semester');
-
-    const newEnrollSemester = this.enrollSemesterRepository.create(enrollSemesterDto);
-      
-    return await this.enrollSemesterRepository.save(newEnrollSemester);
   }
 }

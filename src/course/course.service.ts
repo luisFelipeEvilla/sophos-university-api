@@ -11,14 +11,14 @@ import { StudentService } from 'src/student/student.service';
 @Injectable()
 export class CourseService {
   constructor(@InjectRepository(Course) private readonly courseModel: Repository<Course>,
-  @InjectRepository(TeachCourse) private readonly teachCourseModel: Repository<TeachCourse>,
-  private readonly teacherService: TeacherService,
-  private readonly studentService: StudentService
+    @InjectRepository(TeachCourse) private readonly teachCourseModel: Repository<TeachCourse>,
+    private readonly teacherService: TeacherService,
+    private readonly studentService: StudentService
   ) { }
-  
+
   async create(createCourseDto: CreateCourseDto) {
     const course = this.courseModel.create(createCourseDto);
-    
+
     return await this.courseModel.save(course);
   }
 
@@ -27,7 +27,7 @@ export class CourseService {
   }
 
   async findOne(id: number) {
-    const course = await this.courseModel.findOne({where:  {id}, relations: ['teachers', 'students']});
+    const course = await this.courseModel.findOne({ where: { id }, relations: ['teachers', 'students'] });
 
     if (!course) throw new NotFoundException('Course not found');
 
@@ -35,15 +35,15 @@ export class CourseService {
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
-    const course = await this.courseModel.findOne({where:  {id}});
+    const course = await this.courseModel.findOne({ where: { id } });
     this.courseModel.merge(course, updateCourseDto);
-    
+
     return await this.courseModel.save(course);
   }
 
   async remove(id: number) {
-    const course = await this.courseModel.findOne({where:  {id}});
-    
+    const course = await this.courseModel.findOne({ where: { id } });
+
     return await this.courseModel.remove(course);
   }
 
@@ -56,7 +56,7 @@ export class CourseService {
       const alreadyTeach = course.teachers.find(teacher => teacher.id === teacherId);
 
       if (alreadyTeach) throw new ConflictException('The teacher is already teaching the course');
-      
+
       course.teachers.push(teacher);
 
       return await this.courseModel.save(course);
@@ -78,10 +78,10 @@ export class CourseService {
     const student = await this.studentService.findOne(studentId);
 
     // check if the student is already taking the course
-    const alreadyTake = course.students.find(student => student.studentId === studentId);
-    
+    const alreadyTake = course.students.find(student => student.student.id === studentId);
+
     if (alreadyTake) throw new ConflictException('The student is already taking the course');
-    
+
     // get student last semester
     const lastSemester = student.semesters[student.semesters.length - 1];
 
@@ -90,13 +90,16 @@ export class CourseService {
 
     course.students.push(lastSemester);
 
-    console.log(course);
-    
-
     return await this.courseModel.save(course);
   }
 
   async removeStudent(courseId: number, studentId: number) {
+    const course = await this.findOne(courseId);
 
+    if (!course) throw new NotFoundException('Course not found');
+
+    course.students = course.students.filter(student => student.student.id !== studentId);
+
+    return await this.courseModel.save(course);
   }
 }

@@ -1,17 +1,17 @@
 import { EnrollSemester } from "src/student/entities/enroll-semester.entity";
-import { Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, ManyToMany, JoinTable, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, OneToMany, JoinColumn, Column } from "typeorm";
 
 @Entity()
 export class Semester {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @PrimaryColumn()
+    @Column()
     year: number;
 
-    @PrimaryColumn()
+    @Column()
     period: number;
     
-    @OneToOne(() => EnrollSemester, enrollSemester => enrollSemester.semester)
+    @OneToMany(() => EnrollSemester, enrollSemester => enrollSemester.semester)
     students: EnrollSemester[];
 }
