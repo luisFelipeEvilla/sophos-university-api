@@ -12,9 +12,9 @@ export class SemesterService {
   async create(createSemesterDto: CreateSemesterDto) {
     const {year, period} = createSemesterDto
     // check if the semester already exists
-    const semester = this.semesterRepository.findOne({
+    const semester = await this.semesterRepository.findOne({
       where: { year, period}
-    });
+    });    
 
     if (semester) throw new ConflictException(`Semester ${year}-${period} already exists`)
 
