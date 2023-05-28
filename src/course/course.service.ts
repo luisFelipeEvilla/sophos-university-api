@@ -85,6 +85,9 @@ export class CourseService {
     // get student last semester
     const lastSemester = student.semesters[student.semesters.length - 1];
 
+    // check if the student has enough credits
+    if (lastSemester.credits < course.credits) throw new ConflictException('The student does not have enough credits');
+
     course.students.push(lastSemester);
 
     console.log(course);
