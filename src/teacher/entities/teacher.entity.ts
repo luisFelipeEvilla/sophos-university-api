@@ -20,7 +20,7 @@ export class Teacher {
     @Column()
     facultyId: number;
 
-    @OneToMany(() => Degree, degree => degree.teacher)
+    @OneToMany(() => Degree, degree => degree.teacher, { eager: true })
     degrees: Degree[];
 
     @ManyToMany(() => Course, course => course.teachers)

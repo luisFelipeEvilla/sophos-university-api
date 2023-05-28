@@ -69,9 +69,11 @@ export class CourseService {
   }
 
   async removeTeacher(courseId: number, teacherId: number) {
-    const teachCourse = await this.teachCourseModel.findOne({where:  {courseId, teacherId}});
-    
-    return await this.teachCourseModel.remove(teachCourse);
+    const course = await this.findOne(courseId);
+
+    course.teachers = course.teachers.filter(teacher => teacher.id !== teacherId);
+
+    return await this.courseModel.save(course);
   }
 
   async addStudent(courseId: number, studentId: number) {
