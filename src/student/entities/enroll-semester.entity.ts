@@ -16,6 +16,6 @@ export class EnrollSemester {
     @ManyToOne(() => Student, student => student.semesters)
     student: Student;
 
-    @ManyToOne(() => Semester, semester => semester.students)
-    semester: Semester;
+    @OneToOne(() => EnrollSemester, enrollSemester => enrollSemester.student)
+    semester: EnrollSemester[];
 }

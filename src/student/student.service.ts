@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -34,7 +34,7 @@ export class StudentService {
   }
 
   async findOne(id: number) {
-    const student = await this.studentRepository.findOne({ where: { id }, relations: ['faculty'] });
+    const student = await this.studentRepository.findOne({ where: { id }, relations: ['faculty', 'semesters'] });
 
 
     if (!student) throw new NotFoundException(`Student with id ${id} not found`);
@@ -75,8 +75,10 @@ export class StudentService {
       }
     );
 
-    if (enrollSemester) throw new Error('Student already enroll this semester');
+    if (enrollSemester) throw new ConflictException('Student already enroll this semester');
 
-    const newEnrollSemester = this.enrollSemesterRepository.create();
+    const newEnrollSemester = this.enrollSemesterRepository.create(enrollSemesterDto);
+      
+    return await this.enrollSemesterRepository.save(newEnrollSemester);
   }
 }
