@@ -30,7 +30,11 @@ export class CourseService {
   }
 
   async findOne(id: number) {
-    return await this.courseModel.findOne({where:  {id}});
+    const course = await this.courseModel.findOne({where:  {id}, relations: ['teachers']});
+
+    if (!course) throw new NotFoundException('Course not found');
+
+    return course;
   }
 
   async update(id: number, updateCourseDto: UpdateCourseDto) {
@@ -50,18 +54,18 @@ export class CourseService {
     try {
       const course = await this.findOne(courseId);
       const teacher = await this.teacherService.findOne(teacherId);
+
+      // check if the teacher is already teaching the course
+      const alreadyTeach = course.teachers.find(teacher => teacher.id === teacherId);
+
+      if (alreadyTeach) throw new ConflictException('The teacher is already teaching the course');
+      
+      course.teachers.push(teacher);
+
+      return await this.courseModel.save(course);
     } catch (error) {
       if (error instanceof NotFoundException) throw new NotFoundException(error.message);
     }
-
-    // check if the teacher is already teaching the course
-    const alreadyTeach = await this.teachCourseModel.findOne({where:  {courseId, teacherId}});
-    
-    if (alreadyTeach) throw new ConflictException('The teacher is already teaching the course');
-    
-    const teachCourse = this.teachCourseModel.create({courseId, teacherId});
-
-    return await this.teachCourseModel.save(teachCourse);
   }
 
   async removeTeacher(courseId: number, teacherId: number) {

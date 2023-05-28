@@ -79,6 +79,4 @@ export class StudentService {
 
     const newEnrollSemester = this.enrollSemesterRepository.create();
   }
-
-  
 }
