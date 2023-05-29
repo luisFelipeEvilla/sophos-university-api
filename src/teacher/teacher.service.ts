@@ -27,7 +27,7 @@ export class TeacherService {
   async findOne(id: number) {
     const teacher = await this.teacherRepository.findOne({
       where: { id },
-      relations: ['degrees']
+      relations: ['degrees', 'courses']
     });
 
     if (!teacher) {
