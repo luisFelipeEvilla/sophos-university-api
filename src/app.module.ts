@@ -7,6 +7,9 @@ import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { CourseModule } from './course/course.module';
 import { SemesterModule } from './semester/semester.module';
+import { ConfigModule } from '@nestjs/config';
+
+ConfigModule.forRoot()
 
 @Module({
   imports: [
