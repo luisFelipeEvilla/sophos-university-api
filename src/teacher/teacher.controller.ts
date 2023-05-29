@@ -36,8 +36,8 @@ export class TeacherController {
   }
 
   @Post(':id/degrees')
-  createDegree(@Param('id') id: string, @Body() degree: createDegreeDto) {
-    return this.degreeService.create(degree);
+  createDegree(@Param('id') id: string, @Body() degree: CreateDegreeDtoWithTeacher) {
+    return this.teacherService.createDegree(+id, degree);
   }
 
   @Delete(':id/degrees/:degreeId')
