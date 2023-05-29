@@ -12,11 +12,11 @@ import { SemesterModule } from './semester/semester.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres', // your username
-      password: 'test', // your password
-      database: 'sophos',
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 5432,
+      username: process.env.DATABASE_USER || 'postgres', // your username
+      password: process.env.DATABASE_PASSWORD || 'test', // your password
+      database: process.env.DATABASE_NAME || 'sophos',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
